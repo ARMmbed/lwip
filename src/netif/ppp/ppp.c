@@ -251,6 +251,8 @@ u_long subnetMask;
 
 static PPPControl pppControl[NUM_PPP] __attribute((section("AHBSRAM1"))); /* The PPP interface control blocks. */
 
+sys_mbox_t pppMbox; //Used to signal PPP thread that a PPP session begins
+
 /*
  * PPP Data Link Layer "protocol" table.
  * One entry per supported protocol.
@@ -448,6 +450,9 @@ pppInit(void)
       (*protp->init)(i);
     }
   }
+
+  sys_mbox_new(&pppMbox, 1);
+  sys_thread_new(PPP_THREAD_NAME, pppInputThread, (void*)NULL, PPP_THREAD_STACKSIZE, PPP_THREAD_PRIO); //Create PPP thread here
 }
 
 void
@@ -573,7 +578,7 @@ pppOverSerialOpen(sio_fd_t fd, void (*linkStatusCB)(void *ctx, int errCode, void
     PPPDEBUG(LOG_INFO, ("pppOverSerialOpen: unit %d: Connecting\n", pd));
     pppStart(pd);
 #if PPP_INPROC_OWNTHREAD
-    sys_thread_new(PPP_THREAD_NAME, pppInputThread, (void*)&pc->rx, PPP_THREAD_STACKSIZE, PPP_THREAD_PRIO);
+    sys_mbox_post(&pppMbox, (void*)&pc->rx);
 #endif
   }
 
@@ -1508,6 +1513,10 @@ pppInputThread(void *arg)
   int count;
   PPPControlRx *pcrx = arg;
 
+  do
+  {
+  sys_arch_mbox_fetch(&pppMbox, (void**)&pcrx, 0); //Wait indefinitely
+
   while (lcp_phase[pcrx->pd] != PHASE_DEAD) {
     count = sio_read(pcrx->fd, pcrx->rxbuf, PPPOS_RX_BUFSIZE);
     if(count > 0) {
@@ -1517,6 +1526,7 @@ pppInputThread(void *arg)
       sys_msleep(1);
     }
   }
+  } while(1); //Never terminates
 }
 #endif /* PPPOS_SUPPORT && PPP_INPROC_OWNTHREAD */
 
