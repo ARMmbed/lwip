@@ -1678,9 +1678,13 @@ dhcp_create_msg(struct netif *netif, struct dhcp *dhcp, u8_t message_type)
   ip_addr_set_zero(&dhcp->msg_out->yiaddr);
   ip_addr_set_zero(&dhcp->msg_out->siaddr);
   ip_addr_set_zero(&dhcp->msg_out->giaddr);
-  for (i = 0; i < DHCP_CHADDR_LEN; i++) {
-    /* copy netif hardware address, pad with zeroes */
-    dhcp->msg_out->chaddr[i] = (i < netif->hwaddr_len) ? netif->hwaddr[i] : 0/* pad byte*/;
+  for (i = 0; i < netif->hwaddr_len; i++) {
+    /* copy netif hardware address */
+    dhcp->msg_out->chaddr[i] = netif->hwaddr[i];
+  }
+  for ( ; i < DHCP_CHADDR_LEN; i++) {
+    /* ... pad rest with zeroes */
+    dhcp->msg_out->chaddr[i] = 0;
   }
   for (i = 0; i < DHCP_SNAME_LEN; i++) {
     dhcp->msg_out->sname[i] = 0;
