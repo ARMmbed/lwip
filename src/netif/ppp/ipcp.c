@@ -1235,9 +1235,13 @@ ipcp_up(fsm *f)
   }
 
   if (ho->hisaddr == 0) {
+#if 0
     IPCPDEBUG(LOG_ERR, ("Could not determine remote IP address\n"));
     ipcp_close(f->unit, "Could not determine remote IP address");
     return;
+#else //Kludge
+    ho->hisaddr = 0; //Set remote IP to 0.0.0.0, this is needed as most 3g providers do not advertise the remote IP to the user
+#endif
   }
   if (go->ouraddr == 0) {
     IPCPDEBUG(LOG_ERR, ("Could not determine local IP address\n"));
