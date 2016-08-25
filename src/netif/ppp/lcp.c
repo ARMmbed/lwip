@@ -107,7 +107,7 @@ static u32_t lcp_echo_number        = 0;                /* ID number of next ech
 static u32_t lcp_echo_timer_running = 0;                /* TRUE if a timer is running */
 
 /* @todo: do we really need such a large buffer? The typical 1500 bytes seem too much. */
-static u_char nak_buffer[PPP_MRU]; /* where we construct a nak packet */ 
+static u_char nak_buffer[PPP_MRU] __attribute((section("AHBSRAM1"))); /* where we construct a nak packet */
 
 /*
  * Callbacks for fsm code.  (CI = Configuration Information)

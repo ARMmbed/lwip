@@ -249,7 +249,7 @@ static void pppInProc(PPPControlRx *pcrx, u_char *s, int l);
 /******************************/
 u_long subnetMask;
 
-static PPPControl pppControl[NUM_PPP]; /* The PPP interface control blocks. */
+static PPPControl pppControl[NUM_PPP] __attribute((section("AHBSRAM1"))); /* The PPP interface control blocks. */
 
 /*
  * PPP Data Link Layer "protocol" table.
@@ -279,7 +279,7 @@ struct protent *ppp_protocols[] = {
  * Buffers for outgoing packets.  This must be accessed only from the appropriate
  * PPP task so that it doesn't need to be protected to avoid collisions.
  */
-u_char outpacket_buf[NUM_PPP][PPP_MRU+PPP_HDRLEN];
+u_char outpacket_buf[NUM_PPP][PPP_MRU+PPP_HDRLEN] __attribute((section("AHBSRAM1")));
 
 
 /*****************************/
