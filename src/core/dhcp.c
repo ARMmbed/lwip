@@ -564,7 +564,7 @@ dhcp_handle_ack(struct netif *netif)
 #if LWIP_DNS
   /* DNS servers */
   n = 0;
-  while(dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n) && (n < DNS_MAX_SERVERS)) {
+  while((n < DNS_MAX_SERVERS) && dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n)) {
     ip_addr_t dns_addr;
     ip4_addr_set_u32(&dns_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n)));
     dns_setserver(n, &dns_addr);
