@@ -282,8 +282,32 @@ struct mem {
  * If so, make sure the memory at that location is big enough (see below on
  * how that space is calculated). */
 #ifndef LWIP_RAM_HEAP_POINTER
+
+#if defined(TARGET_LPC4088) || defined(TARGET_LPC4088_DM)
+#  if defined (__ICCARM__)
+#     define ETHMEM_SECTION
+#  elif defined(TOOLCHAIN_GCC_CR)
+#     define ETHMEM_SECTION __attribute__((section(".data.$RamPeriph32")))
+#  else
+#     define ETHMEM_SECTION __attribute__((section("AHBSRAM1"),aligned))
+#  endif
+#elif defined(TARGET_LPC1768)
+#  if defined (__ICCARM__)
+#     define ETHMEM_SECTION
+#  elif defined(TOOLCHAIN_GCC_CR)
+#     define ETHMEM_SECTION __attribute__((section(".data.$RamPeriph32")))
+#  else
+#     define ETHMEM_SECTION __attribute__((section("AHBSRAM0"),aligned))
+#  endif
+#else
+#define ETHMEM_SECTION
+#endif
+
 /** the heap. we need one struct mem at the end and some room for alignment */
-LWIP_DECLARE_MEMORY_ALIGNED(ram_heap, MEM_SIZE_ALIGNED + (2U*SIZEOF_STRUCT_MEM));
+#if defined (__ICCARM__)
+#pragma location = ".ethusbram"
+#endif
+LWIP_DECLARE_MEMORY_ALIGNED(ram_heap, MEM_SIZE_ALIGNED + (2U*SIZEOF_STRUCT_MEM)) ETHMEM_SECTION;
 #define LWIP_RAM_HEAP_POINTER ram_heap
 #endif /* LWIP_RAM_HEAP_POINTER */
 
