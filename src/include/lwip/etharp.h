@@ -50,7 +50,7 @@
 #include "lwip/ip4_addr.h"
 #include "lwip/netif.h"
 #include "lwip/ip4.h"
-#include "netif/ethernet.h"
+#include "netif/lwip_ethernet.h"
 
 #ifdef __cplusplus
 extern "C" {

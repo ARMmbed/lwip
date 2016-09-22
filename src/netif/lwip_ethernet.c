@@ -39,7 +39,7 @@
 
 #if LWIP_ARP || LWIP_ETHERNET
 
-#include "netif/ethernet.h"
+#include "netif/lwip_ethernet.h"
 #include "lwip/def.h"
 #include "lwip/stats.h"
 #include "lwip/etharp.h"
