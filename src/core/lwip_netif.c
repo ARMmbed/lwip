@@ -71,7 +71,7 @@
 #endif /* LWIP_NETIF_LOOPBACK_MULTITHREADING */
 #endif /* ENABLE_LOOPBACK */
 
-#include "netif/ethernet.h"
+#include "netif/lwip_ethernet.h"
 
 #if LWIP_AUTOIP
 #include "lwip/autoip.h"

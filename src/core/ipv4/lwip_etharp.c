@@ -52,7 +52,7 @@
 #include "lwip/snmp.h"
 #include "lwip/dhcp.h"
 #include "lwip/autoip.h"
-#include "netif/ethernet.h"
+#include "netif/lwip_ethernet.h"
 
 #include <string.h>
 
