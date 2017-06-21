@@ -45,7 +45,7 @@
 
 #include "lwip/pbuf.h"
 #include "lwip/netif.h"
-#include "lwip/prot/ethernet.h"
+#include "lwip/prot/lwip_ethernet.h"
 
 #ifdef __cplusplus
 extern "C" {
